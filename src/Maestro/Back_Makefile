@@ -1,0 +1,36 @@
+
+CC=gcc
+CFLAGS= -ansi -pedantic -Wall
+DEBUG= -g
+
+all: docfx
+docfx: main.o utils.o validate.o adt_function.o adt_vector.o adt_parameter.o dokufx.o main.o errors.o
+	$(CC) $(CFLAGS) -o docfx utils.o validate.o adt_function.o adt_vector.o adt_parameter.o main.o dokufx.o errors.o
+main.o: main.c
+	$(CC) $(CFLAGS) -c -o main.o main.c
+main.c: types.h adt_vector.h utils.h validate.h adt_function.h errors.h main.h
+dokufx.o: dokufx.c
+	$(CC) $(CFLAGS) -c -o dokufx.o dokufx.c
+dokufx.c: types.h adt_vector.h adt_function.h adt_parameter.h utils.h main.h
+utils.o: utils.c
+	$(CC) $(CFLAGS) -c -o utils.o utils.c 
+utils.c: utils.h adt_vector.h adt_function.h adt_parameter.h types.h
+validate.o: validate.c
+	$(CC) $(CFLAGS) -c -o validate.o validate.c
+validate.c: validate.h types.h
+errors.o: errors.c
+	$(CC) $(CFLAGS) -c -o errors.o errors.c
+errors.c: errors.h types.h
+adt_parameter.o: adt_parameter.c
+	$(CC) $(CFLAGS) -c -o adt_parameter.o adt_parameter.c
+adt_parameter.c: adt_parameter.h types.h 
+adt_vector.o: adt_vector.c
+	$(CC) $(CFLAGS) -c -o adt_vector.o adt_vector.c
+adt_vector.c: adt_function.h adt_vector.h types.h adt_parameter.h
+adt_function.o: adt_function.c
+	$(CC) $(CFLAGS) -c -o adt_function.o adt_function.c
+adt_function.c: adt_function.h adt_parameter.h adt_vector.h types.h
+clean:
+	rm *.o
+
+
